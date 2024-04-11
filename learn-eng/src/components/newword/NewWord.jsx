@@ -1,13 +1,18 @@
+
 import React, { useState } from 'react';
 import styles from './NewWord.module.css';
+
+
+const apiUrl = 'https://itgirlschool.justmakeit.ru/api/words';
 
 const NewWord = ({ onAddWord }) => {
   const [newWord, setNewWord] = useState({
     english: '',
     transcription: '',
     russian: '',
-    tag: ''
+    tags: ''
   });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -17,16 +22,71 @@ const NewWord = ({ onAddWord }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onAddWord(newWord);
-    setNewWord({
-      english: '',
-      transcription: '',
-      russian: '',
-      tags: ''
-    });
+    try {
+      setLoading(true);
+      await handleAddWord(newWord);
+
+      alert('Слово успешно добавлено!');
+  
+      setNewWord({
+        english: '',
+        transcription: '',
+        russian: '',
+        tags: ''
+      });
+    } catch (error) {
+      console.error('Ошибка:', error);
+      alert('Ошибка при добавлении слова. Попробуйте снова.');
+    } finally {
+      setLoading(false); 
+    }
   };
+
+
+  const handleAddWord = async (word) => {
+    try {
+
+      const tagsJson = JSON.stringify([word.tags]);
+  
+
+      const requestData = {
+        english: word.english,
+        transcription: word.transcription,
+        russian: word.russian,
+        tags: word.tags,
+        tags_json: tagsJson 
+      };
+  
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData), 
+      });
+  
+
+      if (!response.ok) {
+        const errorMessage = `Ошибка ${response.status}: ${response.statusText}`;
+        throw new Error(errorMessage);
+      }
+  
+      const data = await response.json();
+      console.log('Слово добавлено:', data);
+  
+
+      if (onAddWord) {
+        onAddWord(data);
+      }
+  
+    } catch (error) {
+      console.error('Ошибка:', error);
+      throw error; 
+    }
+  };
+  
 
   return (
     <div className={styles.NewWord}>
@@ -38,6 +98,7 @@ const NewWord = ({ onAddWord }) => {
           value={newWord.english}
           onChange={handleChange}
           placeholder="слово на англ.яз"
+          required
         />
         <input
           type="text"
@@ -52,20 +113,21 @@ const NewWord = ({ onAddWord }) => {
           value={newWord.russian}
           onChange={handleChange}
           placeholder="перевод"
+          required
         />
         <input
           type="text"
-          name="tag"
-          value={newWord.tag}
+          name="tags"
+          value={newWord.tags}
           onChange={handleChange}
           placeholder="тег"
         />
-        <button type="submit" className={styles.button}>Добавить</button>
+        <button type="submit" className={styles.button} disabled={loading}>
+          {loading ? 'Добавление...' : 'Добавить'}
+        </button>
       </form>
-      
     </div>
   );
 };
 
-export default NewWord; 
-
+export default NewWord;

@@ -19,7 +19,7 @@ const Main = () => {
       );
       const data = await response.json();
       setWords(data);
-      setShowTranslation(false); // Скрыть перевод при загрузке новых слов
+      setShowTranslation(false); 
     } catch (error) {
       console.error("Error fetching words:", error);
     }
@@ -37,13 +37,13 @@ const Main = () => {
       return;
     }
     setCurrentIndex((prevIndex) => prevIndex + 1);
-    setShowTranslation(false); // Скрыть перевод при переключении на следующее слово
+    setShowTranslation(false); 
   };
 
   const handlePrevWord = () => {
     if (currentIndex === 0) return;
     setCurrentIndex((prevIndex) => prevIndex - 1);
-    setShowTranslation(false); // Скрыть перевод при переключении на предыдущее слово
+    setShowTranslation(false); 
   };
 
   const currentWordIndex = currentIndex + 1;
