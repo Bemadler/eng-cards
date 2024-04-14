@@ -1,3 +1,4 @@
+
 import ArrowRight from "../assets/icons/ArrowRight.png";
 import ArrowLeft from "../assets/icons/ArrowLeft.png";
 import React, { useState, useEffect } from "react";
@@ -7,6 +8,15 @@ const Main = () => {
   const [words, setWords] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showTranslation, setShowTranslation] = useState(false);
+  const [wordsLearned, setWordsLearned] = useState(0); //wordsLearned: число, которое хранит количество изученных слов.
+  const buttonRef = React.useRef(null);
+
+  useEffect(() => {
+    if (buttonRef.current) {
+      // установили на кнопку фокус
+      buttonRef.current.focus();
+    }
+  }, [currentIndex]); 
 
   useEffect(() => {
     fetchWords();
@@ -21,12 +31,19 @@ const Main = () => {
       setWords(data);
       setShowTranslation(false); 
     } catch (error) {
-      console.error("Error fetching words:", error);
+      console.error("ошибка сбора слов:", error);
     }
+  };
+//состояние сколько слов изучено и сложение +1
+  const incrementWordsLearned = () => {
+    setWordsLearned(wordsLearned + 1);
   };
 
   const toggleTranslation = () => {
     setShowTranslation(!showTranslation);
+    if (!showTranslation) { //если перевод не скрыт, то увеличиваем слова изученные
+        incrementWordsLearned();
+    }
   };
 
   const handleNextWord = () => {
@@ -37,13 +54,13 @@ const Main = () => {
       return;
     }
     setCurrentIndex((prevIndex) => prevIndex + 1);
-    setShowTranslation(false); 
+    setShowTranslation(false);
   };
 
   const handlePrevWord = () => {
     if (currentIndex === 0) return;
     setCurrentIndex((prevIndex) => prevIndex - 1);
-    setShowTranslation(false); 
+    setShowTranslation(false);
   };
 
   const currentWordIndex = currentIndex + 1;
@@ -71,11 +88,14 @@ const Main = () => {
             <h2 className={styles.green}>{words[currentIndex].russian}</h2>
           )}
           {!showTranslation && (
-            <button onClick={toggleTranslation}>Показать перевод</button>
+            <button ref={buttonRef} onClick={toggleTranslation}>Показать перевод</button>
           )}
           <p>
             {currentWordIndex}/{totalWordsCount}
           </p>
+          <div className={styles.learnedWordsCounter}>
+              <p>Изученных слов: {wordsLearned}</p>
+          </div>
         </div>
       )}
 

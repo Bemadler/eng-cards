@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import styles from './NewWord.module.css';
 
 
-const apiUrl = 'https://itgirlschool.justmakeit.ru/api/words';
+const apiUrl = 'http://itgirlschool.justmakeit.ru/api/words/{id}/delete';//чтобы удалять слово, нужен этот url 
 
 const NewWord = ({ onAddWord }) => {
   const [newWord, setNewWord] = useState({
