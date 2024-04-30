@@ -1,4 +1,4 @@
-
+import Footer from '../../components/footer/Footer.jsx';
 import React, { useState, useEffect } from 'react';
 import styles from './AllWordsButton.module.css';
 
@@ -14,12 +14,13 @@ const WordList = () => {
     try {
       const response = await fetch('https://itgirlschool.justmakeit.ru/api/words');
       if (!response.ok) {
-        throw new Error('Failed to fetch word list');
+        throw new Error('Ошибка при загрузке слов');
       }
       const data = await response.json();
       setWordList(data);
+      console.log('Список слов после обновления:', data); 
     } catch (error) {
-      console.error('Error fetching word list:', error);
+      console.error('Ошибка', error);
     }
   };
 
@@ -29,8 +30,8 @@ const WordList = () => {
 
   const saveWord = async (updatedWord) => {
     try {
-      const response = await fetch(`https://itgirlschool.justmakeit.ru/api/words/${updatedWord.id}`, {
-        method: 'PUT',
+      const response = await fetch(`http://itgirlschool.justmakeit.ru/api/words/${updatedWord.id}/update`, {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -38,16 +39,17 @@ const WordList = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to save updated word');
+        throw new Error('Ошибка при сохранении слова');
       }
 
       const data = await response.json();
       
       setWordList((prevWordList) => prevWordList.map(word => word.id === data.id ? data : word));
-
+      console.log('Список слов после сохранения:', wordList);
       setEditingWord(null);
+      console.log('Список слов после удаления:', wordList);
     } catch (error) {
-      console.error('Error saving updated word:', error);
+      console.error('Ошибка обновления слова:', error);
     }
   };
 
@@ -57,14 +59,14 @@ const WordList = () => {
 
   const deleteWord = async (wordId) => {
     try {
-        const response = await fetch(`https://itgirlschool.justmakeit.ru/api/words/${wordId}`, {
-            method: 'DELETE',
+        const response = await fetch(`https://itgirlschool.justmakeit.ru/api/words/${wordId}/delete`, {
+            method: 'POST',
         });
 
 
         if (response.ok) {
             setWordList((prevWordList) => prevWordList.filter(word => word.id !== wordId));
-
+            console.log('Список слов после удаления:', wordList);
         }
     } catch (error) {
         console.error('Ошибка при удалении слова:', error);
@@ -88,7 +90,6 @@ const WordList = () => {
           {wordList.map((word) => (
             <tr key={word.id}>
               {editingWord && editingWord.id === word.id ? (
-                // редактирование слова
                 <>
                   <td>
                     <input
@@ -147,6 +148,7 @@ const WordList = () => {
           ))}
         </tbody>
       </table>
+        <Footer /> 
     </div>
   );
 };

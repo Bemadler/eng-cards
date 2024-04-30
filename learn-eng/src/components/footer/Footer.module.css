@@ -1,12 +1,14 @@
 .footer {
     background-color: #c4ebd4;
     display: flex;
-    align-items: center;
     flex-direction: row;
     border-radius: 5px;
-    min-width: 100vh;
-    max-width:200vh;
-    margin-top: 30%;
+
+    bottom: 0; 
+    left: 0; 
+    width: 100%; 
+    z-index: 1000; 
+    background-color: #b8f1b5;
 }
 
 .copyright {

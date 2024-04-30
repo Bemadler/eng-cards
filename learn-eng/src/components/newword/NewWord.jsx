@@ -2,15 +2,14 @@
 import React, { useState } from 'react';
 import styles from './NewWord.module.css';
 
-
-const apiUrl = 'http://itgirlschool.justmakeit.ru/api/words/{id}/delete';//чтобы удалять слово, нужен этот url 
-
 const NewWord = ({ onAddWord }) => {
   const [newWord, setNewWord] = useState({
-    english: '',
-    transcription: '',
-    russian: '',
-    tags: ''
+    id: "",
+    english: "",
+    transcription: "",
+    russian: "",
+    tags: "",
+    tags_json: "[]"
   });
   const [loading, setLoading] = useState(false);
 
@@ -27,14 +26,13 @@ const NewWord = ({ onAddWord }) => {
     try {
       setLoading(true);
       await handleAddWord(newWord);
-
-      alert('Слово успешно добавлено!');
-  
       setNewWord({
-        english: '',
-        transcription: '',
-        russian: '',
-        tags: ''
+        id: "",
+        english: "",
+        transcription: "",
+        russian: "",
+        tags: "",
+        tags_json: "[]"
       });
     } catch (error) {
       console.error('Ошибка:', error);
@@ -44,60 +42,55 @@ const NewWord = ({ onAddWord }) => {
     }
   };
 
-
   const handleAddWord = async (word) => {
     try {
+      const response = await fetch("http://itgirlschool.justmakeit.ru/api/words/add");
+      if (!response.ok) {
+        throw new Error('Ошибка при загрузке списка слов');
+      }
+      const wordList = await response.json();
+      
+      const newId = wordList.length > 0 
+      ? wordList[wordList.length - 1].id + 1 
+      : 1;
 
-      const tagsJson = JSON.stringify([word.tags]);
-  
-
-      const requestData = {
-        english: word.english,
-        transcription: word.transcription,
-        russian: word.russian,
-        tags: word.tags,
-        tags_json: tagsJson 
-      };
-  
-      const response = await fetch(apiUrl, {
+      console.log('Список слов после обновления:', wordList);
+      
+      const responseAdd = await fetch(`http://itgirlschool.justmakeit.ru/api/words/${word.id}/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(requestData), 
+        body: JSON.stringify({ ...word, id: newId }), 
       });
-  
 
-      if (!response.ok) {
-        const errorMessage = `Ошибка ${response.status}: ${response.statusText}`;
-        throw new Error(errorMessage);
+      console.log( { ...word, id: newId })
+  
+      if (!responseAdd.ok) {
+        throw new Error('Ошибка при добавлении слова');
       }
   
-      const data = await response.json();
-      console.log('Слово добавлено:', data);
-  
-
+      const data = await responseAdd.json();
       if (onAddWord) {
         onAddWord(data);
       }
-  
     } catch (error) {
       console.error('Ошибка:', error);
       throw error; 
     }
   };
-  
+
 
   return (
     <div className={styles.NewWord}>
       <h2>Добавить новое слово</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} method='POST'>
         <input
           type="text"
           name="english"
           value={newWord.english}
           onChange={handleChange}
-          placeholder="слово на англ.яз"
+          placeholder="слово на англ. языке"
           required
         />
         <input
@@ -120,10 +113,14 @@ const NewWord = ({ onAddWord }) => {
           name="tags"
           value={newWord.tags}
           onChange={handleChange}
-          placeholder="тег"
+          placeholder="теги"
         />
         <button type="submit" className={styles.button} disabled={loading}>
-          {loading ? 'Добавление...' : 'Добавить'}
+          {loading
+          ?
+          'Добавление...'
+          :
+          'Добавить'}
         </button>
       </form>
     </div>
@@ -131,3 +128,4 @@ const NewWord = ({ onAddWord }) => {
 };
 
 export default NewWord;
+
