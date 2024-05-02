@@ -12,10 +12,10 @@ const WordList = () => {
   useEffect(() => {
     fetchWordList();
   }, []);
-
+  const baseUrl = "https://itgirlschool.justmakeit.ru"
   const fetchWordList = async () => {
     try {
-      const response = await fetch('https://itgirlschool.justmakeit.ru/api/words');
+      const response = await fetch(`${baseUrl}/api/words`);
       if (!response.ok) {
         throw new Error('Ошибка при загрузке слов');
       }
@@ -46,7 +46,7 @@ const WordList = () => {
 
   const saveWord = async (updatedWord) => {
     try {
-      const response = await fetch(`https://itgirlschool.justmakeit.ru/api/words/${updatedWord.id}/update`, {
+      const response = await fetch(`${baseUrl}/api/words/${updatedWord.id}/update`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -75,7 +75,7 @@ const WordList = () => {
 
   const deleteWord = async (wordId) => {
     try {
-        const response = await fetch(`https://itgirlschool.justmakeit.ru/api/words/${wordId}/delete`, {
+        const response = await fetch(`${baseUrl}/api/words/${wordId}/delete`, {
             method: 'POST',
         });
 
