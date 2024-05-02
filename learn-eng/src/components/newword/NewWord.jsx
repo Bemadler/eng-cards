@@ -41,10 +41,10 @@ const NewWord = ({ onAddWord }) => {
       setLoading(false); 
     }
   };
-
+  const baseUrl = "https://itgirlschool.justmakeit.ru"
   const handleAddWord = async (word) => {
     try {
-      const baseUrl = "https://itgirlschool.justmakeit.ru"
+
       const response = await fetch(`${baseUrl}/api/words`,
       {
       method: "POST",

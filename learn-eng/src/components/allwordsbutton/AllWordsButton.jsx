@@ -46,7 +46,7 @@ const WordList = () => {
 
   const saveWord = async (updatedWord) => {
     try {
-      const response = await fetch(`http://itgirlschool.justmakeit.ru/api/words/${updatedWord.id}/update`, {
+      const response = await fetch(`https://itgirlschool.justmakeit.ru/api/words/${updatedWord.id}/update`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
