@@ -45,7 +45,7 @@ const NewWord = ({ onAddWord }) => {
   const handleAddWord = async (word) => {
     try {
 
-      const response = await fetch(`${baseUrl}/api/words`,
+      const response = await fetch(`${baseUrl}/api/words/add`,
       {
       method: "POST",
       headers: {
