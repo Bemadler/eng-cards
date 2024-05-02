@@ -12,7 +12,7 @@ const NewWord = ({ onAddWord }) => {
     tags_json: "[]"
   });
   const [loading, setLoading] = useState(false);
-
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setNewWord(prevState => ({
@@ -44,7 +44,8 @@ const NewWord = ({ onAddWord }) => {
 
   const handleAddWord = async (word) => {
     try {
-      const response = await fetch("/api/words/add",
+      const baseUrl = "https://itgirlschool.justmakeit.ru"
+      const response = await fetch(`${baseUrl}/api/words`,
       {
       method: "POST",
       headers: {
