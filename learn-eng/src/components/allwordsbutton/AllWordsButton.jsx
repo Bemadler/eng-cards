@@ -1,3 +1,4 @@
+
 import Footer from '../../components/footer/Footer.jsx';
 import React, { useState, useEffect } from 'react';
 import styles from './AllWordsButton.module.css';
@@ -5,6 +6,8 @@ import styles from './AllWordsButton.module.css';
 const WordList = () => {
   const [wordList, setWordList] = useState([]);
   const [editingWord, setEditingWord] = useState(null);
+  const [emptyInputs, setEmptyInputs] = useState([]);
+
 
   useEffect(() => {
     fetchWordList();
@@ -26,6 +29,19 @@ const WordList = () => {
 
   const startEditing = (word) => {
     setEditingWord(word);
+    checkEmptyInputs(word);
+  };
+
+  const checkEmptyInputs = (word) => {
+    const inputs = Object.keys(word);
+    const emptyInputs = inputs.filter(input => word[input] === '');
+    setEmptyInputs(emptyInputs);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditingWord((prevWord) => ({...prevWord, [name]: value }));
+    checkEmptyInputs({... editingWord, [name]: value});
   };
 
   const saveWord = async (updatedWord) => {
@@ -63,7 +79,6 @@ const WordList = () => {
             method: 'POST',
         });
 
-
         if (response.ok) {
             setWordList((prevWordList) => prevWordList.filter(word => word.id !== wordId));
             console.log('Список слов после удаления:', wordList);
@@ -71,7 +86,7 @@ const WordList = () => {
     } catch (error) {
         console.error('Ошибка при удалении слова:', error);
     }
-};
+  };
 
   return (
     <div className={styles.AddWordBox}>
@@ -91,44 +106,48 @@ const WordList = () => {
             <tr key={word.id}>
               {editingWord && editingWord.id === word.id ? (
                 <>
-                  <td>
+                  <td className={emptyInputs.includes('english')
+                ? styles.emptyInput
+              : ""}>
                     <input
                       type="text"
                       value={editingWord.english}
-                      onChange={(e) =>
-                        setEditingWord({ ...editingWord, english: e.target.value })
-                      }
+                      name="english"
+                      onChange={handleInputChange}
                     />
                   </td>
-                  <td>
+                  <td className={emptyInputs.includes('transcription')
+                ? styles.emptyInput
+              : ''}>
                     <input
                       type="text"
                       value={editingWord.transcription}
-                      onChange={(e) =>
-                        setEditingWord({ ...editingWord, transcription: e.target.value })
-                      }
+                      name="transcription"
+                      onChange={handleInputChange} 
                     />
                   </td>
-                  <td>
+                  <td className={emptyInputs.includes('russian')
+                ? styles.emptyInput
+              : ''}>
                     <input
                       type="text"
                       value={editingWord.russian}
-                      onChange={(e) =>
-                        setEditingWord({ ...editingWord, russian: e.target.value })
-                      }
+                      name="russian"
+                      onChange={handleInputChange}
                     />
                   </td>
-                  <td>
+                  <td className={emptyInputs.includes('tags')
+                ? styles.emptyInput
+              : '' }>
                     <input
                       type="text"
                       value={editingWord.tags}
-                      onChange={(e) =>
-                        setEditingWord({ ...editingWord, tags: e.target.value })
-                      }
+                      name="tags"
+                      onChange={handleInputChange}
                     />
                   </td>
                   <td>
-                    <button onClick={() => saveWord(editingWord)}>Сохранить</button>
+                    <button onClick={() => saveWord(editingWord)} disabled={emptyInputs.length > 0 }>Сохранить</button>
                     <button onClick={cancelEditing}>Отменить</button>
                   </td>
                 </>

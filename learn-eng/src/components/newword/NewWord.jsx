@@ -44,42 +44,27 @@ const NewWord = ({ onAddWord }) => {
 
   const handleAddWord = async (word) => {
     try {
-      const response = await fetch("http://itgirlschool.justmakeit.ru/api/words/add");
+      const response = await fetch("/api/words/add",
+      {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(word),
+    });
       if (!response.ok) {
         throw new Error('Ошибка при загрузке списка слов');
       }
       const wordList = await response.json();
       
-      const newId = wordList.length > 0 
-      ? wordList[wordList.length - 1].id + 1 
-      : 1;
-
       console.log('Список слов после обновления:', wordList);
       
-      const responseAdd = await fetch(`http://itgirlschool.justmakeit.ru/api/words/${word.id}/add`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ ...word, id: newId }), 
-      });
-
-      console.log( { ...word, id: newId })
-  
-      if (!responseAdd.ok) {
-        throw new Error('Ошибка при добавлении слова');
-      }
-  
-      const data = await responseAdd.json();
-      if (onAddWord) {
-        onAddWord(data);
-      }
+      
     } catch (error) {
       console.error('Ошибка:', error);
       throw error; 
     }
   };
-
 
   return (
     <div className={styles.NewWord}>
