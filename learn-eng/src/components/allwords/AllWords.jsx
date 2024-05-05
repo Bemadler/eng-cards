@@ -1,7 +1,7 @@
 
-import Footer from '../../components/footer/Footer.jsx';
+import Footer from '../footer/Footer.jsx';
 import React, { useState, useEffect } from 'react';
-import styles from './AllWordsButton.module.css';
+import styles from './AllWords.module.css';
 
 const WordList = () => {
   const [wordList, setWordList] = useState([]);
@@ -41,7 +41,7 @@ const WordList = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setEditingWord((prevWord) => ({...prevWord, [name]: value }));
-    checkEmptyInputs({... editingWord, [name]: value});
+    checkEmptyInputs({...editingWord, [name]: value});
   };
 
   const saveWord = async (updatedWord) => {
@@ -60,7 +60,9 @@ const WordList = () => {
 
       const data = await response.json();
       
-      setWordList((prevWordList) => prevWordList.map(word => word.id === data.id ? data : word));
+      setWordList((prevWordList) => prevWordList.map(word => word.id === data.id 
+        ? data 
+        : word));
       console.log('Список слов после сохранения:', wordList);
       setEditingWord(null);
       console.log('Список слов после удаления:', wordList);

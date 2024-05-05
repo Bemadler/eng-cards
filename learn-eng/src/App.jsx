@@ -1,6 +1,6 @@
 import './App.css'
 import Navigation from './components/navigation/Navigation.jsx';
-import AllWordsButton from './components/allwordsbutton/AllWordsButton.jsx';
+import AllWords from './components/allwords/AllWords.jsx';
 import LoginForm from './components/navigation/loginform/LoginForm.jsx';
 import RegisterForm from './components/navigation/registerform/RegisterForm.jsx';
 import Main from './components/main/Main.jsx';
@@ -17,7 +17,7 @@ function App(){
       <div>
       <Navigation />
         <Routes>
-          <Route path="/" element={ <AllWordsButton /> } />
+          <Route path="/" element={ <AllWords /> } />
           <Route path="/main" element={ <Main /> } />
           <Route path="/newword" element={ <NewWord /> } />
           <Route path="/registerform" element={ <RegisterForm /> } />

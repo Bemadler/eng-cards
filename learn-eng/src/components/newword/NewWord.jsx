@@ -21,6 +21,29 @@ const NewWord = ({ onAddWord }) => {
     }));
   };
 
+  const handleAddWord = async (newWord) => {
+    try {
+      const baseUrl = "https://itgirlschool.justmakeit.ru";
+      const response = await fetch(`${baseUrl}/api/words/add`,
+      {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newWord),
+    });
+      if (!response.ok) {
+        throw new Error('Ошибка при загрузке списка слов');
+      }
+      const wordList = await response.json();
+      
+      console.log('Список слов после обновления:', wordList);
+      
+    } catch (error) {
+      console.error('Ошибка:', error);
+      throw error; 
+    }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -41,36 +64,11 @@ const NewWord = ({ onAddWord }) => {
       setLoading(false); 
     }
   };
-  const baseUrl = "https://itgirlschool.justmakeit.ru"
-  const handleAddWord = async (word) => {
-    try {
-
-      const response = await fetch(`${baseUrl}/api/words`,
-      {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(word),
-    });
-      if (!response.ok) {
-        throw new Error('Ошибка при загрузке списка слов');
-      }
-      const wordList = await response.json();
-      
-      console.log('Список слов после обновления:', wordList);
-      
-      
-    } catch (error) {
-      console.error('Ошибка:', error);
-      throw error; 
-    }
-  };
-
   return (
     <div className={styles.NewWord}>
       <h2>Добавить новое слово</h2>
-      <form onSubmit={handleSubmit} method='POST'>
+      <form onSubmit={handleSubmit} method='POST' >
+
         <input
           type="text"
           name="english"
