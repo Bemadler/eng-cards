@@ -23,8 +23,7 @@ const NewWord = ({ onAddWord }) => {
 
   const handleAddWord = async (word) => {
     try {
-      const baseUrl = "https://itgirlschool.justmakeit.ru";
-      const response = await fetch(`${baseUrl}/api/words/add`,
+      const response = await fetch(`/api/words/add`,
       {
       method: "POST",
       headers: {
