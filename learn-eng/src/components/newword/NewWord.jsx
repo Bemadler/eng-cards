@@ -21,7 +21,7 @@ const NewWord = ({ onAddWord }) => {
     }));
   };
 
-  const handleAddWord = async (newWord) => {
+  const handleAddWord = async (word) => {
     try {
       const baseUrl = "https://itgirlschool.justmakeit.ru";
       const response = await fetch(`${baseUrl}/api/words/add`,
@@ -30,7 +30,7 @@ const NewWord = ({ onAddWord }) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(newWord),
+      body: JSON.stringify(word),
     });
       if (!response.ok) {
         throw new Error('Ошибка при загрузке списка слов');
