@@ -1,7 +1,7 @@
 
-import Footer from '../../components/footer/Footer.jsx';
+import Footer from '../footer/Footer.jsx';
 import React, { useState, useEffect } from 'react';
-import styles from './AllWordsButton.module.css';
+import styles from './AllWords.module.css';
 
 const WordList = () => {
   const [wordList, setWordList] = useState([]);

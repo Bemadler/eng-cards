@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import styles from './NewWord.module.css';
 
-const NewWord = ({ onAddWord }) => {
+const NewWord = ({ addWord }) => {
   const [newWord, setNewWord] = useState({
     id: "",
     english: "",

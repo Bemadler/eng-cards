@@ -2,6 +2,7 @@
   "name": "learn-eng",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "proxy": "http://itgirlschool.justmakeit.ru",
 
   "dependencies": {

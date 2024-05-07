@@ -2,7 +2,7 @@
   border-radius: 5px;
   min-width: 100vh;
   max-width: 200vh;
-  height: 60vh;
+  height: 65vh;
   display: flex;
   flex-direction: row;
   align-self: center;
@@ -12,8 +12,8 @@
 }
 .SmallCard {
   border: 1px solid #ccc;
-  width: 40vh;
-  height: 45vh;
+  width: 45vh;
+  height: 50vh;
   border-radius: 5px;
   padding: 20px;
   margin-bottom: 20px;
