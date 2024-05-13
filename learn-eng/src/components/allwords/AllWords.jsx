@@ -1,13 +1,13 @@
-
 import Footer from '../footer/Footer.jsx';
 import React, { useState, useEffect } from 'react';
 import styles from './AllWords.module.css';
+import DeleteButton from './DeleteButton.jsx';
 
 const WordList = () => {
   const [wordList, setWordList] = useState([]);
   const [editingWord, setEditingWord] = useState(null);
   const [emptyInputs, setEmptyInputs] = useState([]);
-
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     fetchWordList();
@@ -15,7 +15,7 @@ const WordList = () => {
 
   const fetchWordList = async () => {
     try {
-      const response = await fetch('https://itgirlschool.justmakeit.ru/api/words');
+      const response = await fetch('http://itgirlschool.justmakeit.ru/api/words');
       if (!response.ok) {
         throw new Error('Ошибка при загрузке слов');
       }
@@ -75,7 +75,8 @@ const WordList = () => {
 
   const deleteWord = async (wordId) => {
     try {
-        const response = await fetch(`https://itgirlschool.justmakeit.ru/api/words/${wordId}/delete`, {
+        setIsDeleting(true);
+        const response = await fetch(`http://itgirlschool.justmakeit.ru/api/words/${wordId}/delete`, {
             method: 'POST',
         });
 
@@ -85,7 +86,8 @@ const WordList = () => {
         }
     } catch (error) {
         console.error('Ошибка при удалении слова:', error);
-    }
+        setIsDeleting(false);
+      }
   };
 
   return (
@@ -108,7 +110,7 @@ const WordList = () => {
                 <>
                   <td className={emptyInputs.includes('english')
                 ? styles.emptyInput
-              : ""}>
+                : ""}>
                     <input
                       type="text"
                       value={editingWord.english}
@@ -118,7 +120,7 @@ const WordList = () => {
                   </td>
                   <td className={emptyInputs.includes('transcription')
                 ? styles.emptyInput
-              : ''}>
+                : ''}>
                     <input
                       type="text"
                       value={editingWord.transcription}
@@ -128,7 +130,7 @@ const WordList = () => {
                   </td>
                   <td className={emptyInputs.includes('russian')
                 ? styles.emptyInput
-              : ''}>
+                : ''}>
                     <input
                       type="text"
                       value={editingWord.russian}
@@ -138,7 +140,7 @@ const WordList = () => {
                   </td>
                   <td className={emptyInputs.includes('tags')
                 ? styles.emptyInput
-              : '' }>
+                : '' }>
                     <input
                       type="text"
                       value={editingWord.tags}
@@ -159,7 +161,12 @@ const WordList = () => {
                   <td>{word.tags}</td>
                   <td>
                     <button onClick={() => startEditing(word)}>Редактировать</button>
-                    <button onClick={() => deleteWord(word.id)}>Удалить</button>
+                    {isDeleting 
+                    ? <DeleteButton  
+                    onDelete={deleteWord}
+                    wordId={word.id} 
+                    /> 
+                    : <button onClick={() => deleteWord(word.id)}>Удалить</button>}
                   </td>
                 </>
               )}

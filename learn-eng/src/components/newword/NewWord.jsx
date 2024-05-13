@@ -1,6 +1,8 @@
 
 import React, { useState } from 'react';
 import styles from './NewWord.module.css';
+import LoadingPage from '../loadingpage/LoadingPage.jsx';
+
 
 const NewWord = ({ addWord }) => {
   const [newWord, setNewWord] = useState({
@@ -38,7 +40,9 @@ const NewWord = ({ addWord }) => {
       console.error('Ошибка:', error);
       alert('Ошибка при добавлении слова. Попробуйте снова.');
     } finally {
-      setLoading(false); 
+      setTimeout(() => {
+        setLoading(false);
+      }, 3000);  
     }
   };
 
@@ -107,6 +111,7 @@ const NewWord = ({ addWord }) => {
           :
           'Добавить'}
         </button>
+        {loading && <LoadingPage />}
       </form>
     </div>
   );
