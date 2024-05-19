@@ -1,31 +1,15 @@
 import Footer from '../footer/Footer.jsx';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import styles from './AllWords.module.css';
 import DeleteButton from './DeleteButton.jsx';
+import { WordContext } from '../../contexts/WordContext.jsx';
 
 const WordList = () => {
-  const [wordList, setWordList] = useState([]);
+  const { wordList, isLoading, error, updateWord, deleteWord } = useContext(WordContext);
   const [editingWord, setEditingWord] = useState(null);
   const [emptyInputs, setEmptyInputs] = useState([]);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  useEffect(() => {
-    fetchWordList();
-  }, []);
-
-  const fetchWordList = async () => {
-    try {
-      const response = await fetch('http://itgirlschool.justmakeit.ru/api/words');
-      if (!response.ok) {
-        throw new Error('Ошибка при загрузке слов');
-      }
-      const data = await response.json();
-      setWordList(data);
-      console.log('Список слов после обновления:', data); 
-    } catch (error) {
-      console.error('Ошибка', error);
-    }
-  };
 
   const startEditing = (word) => {
     setEditingWord(word);
@@ -46,24 +30,8 @@ const WordList = () => {
 
   const saveWord = async (updatedWord) => {
     try {
-      const response = await fetch(`http://itgirlschool.justmakeit.ru/api/words/${updatedWord.id}/update`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedWord),
-      });
-
-      if (!response.ok) {
-        throw new Error('Ошибка при сохранении слова');
-      }
-
-      const data = await response.json();
-      
-      setWordList((prevWordList) => prevWordList.map(word => word.id === data.id ? data : word));
-      console.log('Список слов после сохранения:', wordList);
+      await updateWord(updatedWord);
       setEditingWord(null);
-      console.log('Список слов после удаления:', wordList);
     } catch (error) {
       console.error('Ошибка обновления слова:', error);
     }
@@ -73,22 +41,24 @@ const WordList = () => {
     setEditingWord(null);
   };
 
-  const deleteWord = async (wordId) => {
+  const handleDeleteWord = async (wordId) => {
     try {
         setIsDeleting(true);
-        const response = await fetch(`http://itgirlschool.justmakeit.ru/api/words/${wordId}/delete`, {
-            method: 'POST',
-        });
 
-        if (response.ok) {
-            setWordList((prevWordList) => prevWordList.filter(word => word.id !== wordId));
-            console.log('Список слов после удаления:', wordList);
-        }
+  await deleteWord(wordId);
+      setIsDeleting(false);
     } catch (error) {
-        console.error('Ошибка при удалении слова:', error);
-        setIsDeleting(false);
-      }
+      console.error('Ошибка при удалении слова:', error);
+      setIsDeleting(false);
+    }
   };
+  if (isLoading) {
+    return <div>Загрузка...</div>;
+  }
+
+  if (error) {
+    return <div>Ошибка: {error.message}</div>;
+  }
 
   return (
     <div className={styles.AddWordBox}>

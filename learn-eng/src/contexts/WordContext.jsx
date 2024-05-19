@@ -23,12 +23,67 @@ export const WordProvider = ({ children }) => {
         setIsLoading(false);
       }
     };
-
     fetchWordList();
   }, []);
+  const addWord = async (word) => {
+    try {
+      const response = await fetch("/api/words/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(word),
+      });
+      if (!response.ok) {
+        throw new Error('Ошибка при добавлении слова');
+      }
+      const newWord = await response.json();
+      setWordList((prevWordList) => [...prevWordList, newWord]);
+    } catch (error) {
+      console.error('Ошибка добавления слова:', error);
+      throw error;
+    }
+  };
+
+  const updateWord = async (updatedWord) => {
+    try {
+      const response = await fetch(`http://itgirlschool.justmakeit.ru/api/words/${updatedWord.id}/update`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedWord),
+      });
+      if (!response.ok) {
+        throw new Error('Ошибка при обновлении слова');
+      }
+      const data = await response.json();
+      setWordList((prevWordList) =>
+        prevWordList.map((word) => (word.id === data.id ? data : word))
+      );
+    } catch (error) {
+      console.error('Ошибка обновления слова:', error);
+    }
+  };
+
+  const deleteWord = async (wordId) => {
+    try {
+      const response = await fetch(`http://itgirlschool.justmakeit.ru/api/words/${wordId}/delete`, {
+        method: 'POST',
+      });
+      if (!response.ok) {
+        throw new Error('Ошибка при удалении слова');
+      }
+      setWordList((prevWordList) =>
+        prevWordList.filter((word) => word.id !== wordId)
+      );
+    } catch (error) {
+      console.error('Ошибка при удалении слова:', error);
+    }
+  };
 
   return (
-    <WordContext.Provider value={{ wordList, isLoading, error }}>
+    <WordContext.Provider value={{ wordList, isLoading, error, addWord, updateWord, deleteWord }}>
       {children}
     </WordContext.Provider>
   );

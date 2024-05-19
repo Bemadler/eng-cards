@@ -1,10 +1,11 @@
 
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import styles from './NewWord.module.css';
 import LoadingPage from '../loadingpage/LoadingPage.jsx';
+import { WordContext } from '../../contexts/WordContext.jsx';
 
-
-const NewWord = ({ addWord }) => {
+const NewWord = () => {
+  const { addWord } = useContext(WordContext);
   const [newWord, setNewWord] = useState({
     id: "",
     english: "",
@@ -27,7 +28,7 @@ const NewWord = ({ addWord }) => {
     e.preventDefault();
     try {
       setLoading(true);
-      await handleAddWord(newWord);
+      await addWord(newWord);
       setNewWord({
         id: "",
         english: "",
@@ -42,33 +43,10 @@ const NewWord = ({ addWord }) => {
     } finally {
       setTimeout(() => {
         setLoading(false);
-      }, 3000);  
+      }, 2500);  
     }
   };
 
-  const handleAddWord = async (word) => {
-    try {
-      const response = await fetch("/api/words/add",
-      {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(word),
-    });
-      if (!response.ok) {
-        throw new Error('Ошибка при загрузке списка слов');
-      }
-      const wordList = await response.json();
-      
-      console.log('Список слов после обновления:', wordList);
-      
-      
-    } catch (error) {
-      console.error('Ошибка:', error);
-      throw error; 
-    }
-  };
 
   return (
     <div className={styles.NewWord}>
