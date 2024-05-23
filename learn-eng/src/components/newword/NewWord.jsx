@@ -1,15 +1,18 @@
 
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import styles from './NewWord.module.css';
+import { observer } from 'mobx-react-lite';
+import { WordContext } from '../../stores/contexts/WordContext';
+import LoadingPage from '../loadingpage/LoadingPage.jsx';
 
-const NewWord = ({ onAddWord }) => {
+const NewWord = observer(() => {
+  const wordStore = useContext(WordContext);
+
   const [newWord, setNewWord] = useState({
-    id: "",
     english: "",
     transcription: "",
     russian: "",
     tags: "",
-    tags_json: "[]"
   });
   const [loading, setLoading] = useState(false);
 
@@ -23,53 +26,29 @@ const NewWord = ({ onAddWord }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      setLoading(true);
-      await handleAddWord(newWord);
+      wordStore.addWord(newWord);
       setNewWord({
-        id: "",
         english: "",
         transcription: "",
         russian: "",
         tags: "",
-        tags_json: "[]"
       });
     } catch (error) {
       console.error('Ошибка:', error);
       alert('Ошибка при добавлении слова. Попробуйте снова.');
     } finally {
-      setLoading(false); 
-    }
-  };
-
-  const handleAddWord = async (word) => {
-    try {
-      const response = await fetch("/api/words/add",
-      {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(word),
-    });
-      if (!response.ok) {
-        throw new Error('Ошибка при загрузке списка слов');
-      }
-      const wordList = await response.json();
-      
-      console.log('Список слов после обновления:', wordList);
-      
-      
-    } catch (error) {
-      console.error('Ошибка:', error);
-      throw error; 
+      setTimeout(() => {
+        setLoading(false);
+      }, 2500);  
     }
   };
 
   return (
     <div className={styles.NewWord}>
       <h2>Добавить новое слово</h2>
-      <form onSubmit={handleSubmit} method='POST'>
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
           name="english"
@@ -101,16 +80,15 @@ const NewWord = ({ onAddWord }) => {
           placeholder="теги"
         />
         <button type="submit" className={styles.button} disabled={loading}>
-          {loading
-          ?
-          'Добавление...'
-          :
-          'Добавить'}
+          {loading ? 'Добавление...' : 'Добавить'}
         </button>
+        {loading && <LoadingPage />}
       </form>
+      <div>
+        
+      </div>
     </div>
   );
-};
+});
 
 export default NewWord;
-
