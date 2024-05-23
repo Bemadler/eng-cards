@@ -1,10 +1,18 @@
-import Footer from '../../components/footer/Footer.jsx';
+import React, { useRef, useEffect } from 'react';
 import styles from './WordList.module.css';
 import { observer } from 'mobx-react-lite';
 import WordsStores from '../../stores/WordsStores.jsx';
 
 const WordList = observer(() => {
   const wordStore = WordsStores;
+  const listRef = useRef(null);
+
+  useEffect(() => {
+
+    if (listRef.current) {
+      listRef.current.scrollTop = 0;
+    }
+  }, [wordStore.wordList]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -84,7 +92,7 @@ const WordList = observer(() => {
           ))}
         </tbody>
       </table>
-      <Footer />
+
     </div>
   );
 });

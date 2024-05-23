@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./LoginForm.css";
+import Footer from '../../footer/Footer';
 
 const LoginForm = () => {
   const [loginData, setLoginData] = useState({
@@ -41,6 +42,9 @@ const LoginForm = () => {
           />
           <button type="submit">Войти</button>
         </form>
+      </div>
+      <div>
+      <Footer />
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-
+import Footer from '../../components/footer/Footer.jsx';
 import ArrowRight from "../assets/icons/ArrowRight.png";
 import ArrowLeft from "../assets/icons/ArrowLeft.png";
 import React, { useState, useEffect } from "react";
@@ -105,6 +105,7 @@ const Main = () => {
         src={ArrowRight}
         alt="arrow right"
       />
+                <Footer />
     </div>
   );
 };

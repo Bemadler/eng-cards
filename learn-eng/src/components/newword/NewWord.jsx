@@ -4,10 +4,12 @@ import styles from './NewWord.module.css';
 import { observer } from 'mobx-react-lite';
 import { WordContext } from '../../stores/contexts/WordContext';
 import LoadingPage from '../loadingpage/LoadingPage.jsx';
+import Heart from "react-heart"
+import Footer from '../../components/footer/Footer.jsx';
 
 const NewWord = observer(() => {
   const wordStore = useContext(WordContext);
-
+  const [active, setActive] = useState(false);
   const [newWord, setNewWord] = useState({
     english: "",
     transcription: "",
@@ -84,10 +86,12 @@ const NewWord = observer(() => {
         </button>
         {loading && <LoadingPage />}
       </form>
-      <div>
-        
-      </div>
+      <div style={{ width: "2rem" }}>
+			<Heart isActive={active} onClick={() => setActive(!active)} animationTrigger = "both" inactiveColor = "rgba(255,125,125,.75)" activeColor = "#e019ae" style = {{marginTop:'1rem'}} animationDuration = {0.1}/>
+		</div>
+    <Footer />
     </div>
+
   );
 });
 

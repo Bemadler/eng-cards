@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./RegisterForm.css";
+import Footer from '../../footer/Footer.jsx';
 
 const RegisterForm = () => {
   const [registerData, setRegisterData] = useState({
@@ -50,7 +51,9 @@ const RegisterForm = () => {
         <button className="buttonRegister" type="submit">
           Зарегистироваться
         </button>
+        <Footer />
       </form>
+      
     </div>
   );
 };
